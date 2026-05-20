@@ -1,0 +1,38 @@
+# Game Dev Studio workflow status
+project_type: game
+project_name: dual-world-time-puzzle
+user_name: Sue
+created: 2026-05-18T17:51:48+08:00
+updated: 2026-05-20T12:00:38+08:00
+
+current_workflow: create-architecture
+next_workflow: create-epics-and-stories
+
+# Workflow values start as pending and are replaced with artifact paths when complete.
+brainstorm-game: _bmad-output/brainstorming-session-2026-05-18-175252.md
+domain-research: optional
+create-game-brief: _bmad-output/game-brief.md
+gdd: _bmad-output/planning-artifacts/gdds/gdd-dual-world-time-puzzle-2026-05-19/gdd.md
+create-narrative: optional
+create-ux-design: _bmad-output/planning-artifacts/ux-design-specification.md
+prd: optional
+project-context: pending
+create-architecture: _bmad-output/planning-artifacts/game-architecture.md
+create-epics-and-stories: pending
+check-implementation-readiness: pending
+sprint-planning: pending
+create-story: pending
+dev-story: pending
+code-review: optional
+retrospective: optional
+
+workflow_sequence:
+  - brainstorm-game
+  - create-game-brief
+  - gdd
+  - create-architecture
+  - create-epics-and-stories
+  - check-implementation-readiness
+  - sprint-planning
+  - create-story
+  - dev-story
