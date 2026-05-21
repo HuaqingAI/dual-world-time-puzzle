@@ -1,0 +1,86 @@
+# generated: 2026-05-21T09:51:23+08:00
+# last_updated: 2026-05-21T11:20:06+08:00
+# project: dual-world-time-puzzle
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: D:/ProgramData/git/repository/github/huaqingai/dual-world-time-puzzle/_bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog -> in-progress: Automatically when first story is created (via create-story)
+#   - in-progress -> done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-05-21T09:51:23+08:00
+last_updated: 2026-05-21T11:20:06+08:00
+project: dual-world-time-puzzle
+project_key: NOKEY
+tracking_system: file-system
+story_location: D:/ProgramData/git/repository/github/huaqingai/dual-world-time-puzzle/_bmad-output/implementation-artifacts
+
+development_status:
+  epic-1: in-progress
+  1-1-启动到首个花园房间: ready-for-dev
+  1-2-最小共享实现基础: backlog
+  1-3-小精灵基础移动与房间碰撞: backlog
+  1-4-核心输入动作映射: backlog
+  1-5-首房间入口目标引导: backlog
+  epic-1-retrospective: optional
+  epic-2: backlog
+  2-1-受控的双世界状态机: backlog
+  2-2-统一的世界状态响应契约: backlog
+  2-3-藤蔓桥双状态通行: backlog
+  2-4-花门睡眠、唤醒与开启状态: backlog
+  2-5-世界切换可读反馈与轻量状态指示: backlog
+  epic-2-retrospective: optional
+  epic-3: backlog
+  3-1-发光种子的接近与收集: backlog
+  3-2-种子跟随与陪伴反馈: backlog
+  3-3-出口花与种植点携种响应: backlog
+  3-4-首房间完整完成闭环: backlog
+  epic-3-retrospective: optional
+  epic-4: backlog
+  4-1-种植仪式与修复反馈: backlog
+  4-2-中心花园永久恢复状态: backlog
+  4-3-种子驱动的进度与下一步方向: backlog
+  4-4-本地保存与恢复进度读取: backlog
+  epic-4-retrospective: optional
+  epic-5: backlog
+  5-1-暂停菜单与安全返回: backlog
+  5-2-房间重置与风险确认: backlog
+  5-3-分层提示与温和轻推: backlog
+  5-4-设置菜单与基础可访问性: backlog
+  5-5-菜单焦点、确认对话与内容语气: backlog
+  epic-5-retrospective: optional
+  epic-6: backlog
+  6-1-轻量-ui-设计系统验证与主题资源完善: backlog
+  6-2-垂直切片最低资产与导入规范: backlog
+  6-3-关键交互声音反馈完善: backlog
+  6-4-调试覆盖层与事件日志验证: backlog
+  6-5-web-demo、响应式尺寸与导出准备: backlog
+  6-6-关卡类型、难度模型与-v1-扩展边界: backlog
+  6-7-试玩验证与成功指标: backlog
+  epic-6-retrospective: optional
