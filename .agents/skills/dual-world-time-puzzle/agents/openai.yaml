@@ -1,0 +1,6 @@
+interface:
+  display_name: "Dual World Time Puzzle"
+  short_description: "Repo-specific patterns and workflows for dual-world-time-puzzle"
+  default_prompt: "Use the dual-world-time-puzzle repo skill to follow existing architecture, testing, and workflow conventions."
+policy:
+  allow_implicit_invocation: true
