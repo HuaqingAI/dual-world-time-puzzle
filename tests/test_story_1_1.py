@@ -4,10 +4,58 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+IGNORED_CSHARP_DIRS = {".git", ".agents", ".claude", "_bmad", "_bmad-output"}
+VECTOR2_PATTERN = re.compile(r"Vector2\((-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)\)")
 
 
 def read_text(relative_path: str) -> str:
     return (REPO_ROOT / relative_path).read_text(encoding="utf-8")
+
+
+def node_section(scene_text: str, node_name: str) -> str:
+    match = re.search(
+        rf'(?ms)^\[node name="{re.escape(node_name)}"[^\]]*\]\s*\n(?P<body>.*?)(?=^\[node |\Z)',
+        scene_text,
+    )
+    if match is None:
+        raise AssertionError(f"Missing node section: {node_name}")
+    return match.group("body")
+
+
+def node_vector2(scene_text: str, node_name: str, property_name: str) -> tuple[float, float]:
+    section = node_section(scene_text, node_name)
+    match = re.search(rf"^{re.escape(property_name)} = {VECTOR2_PATTERN.pattern}$", section, re.M)
+    if match is None:
+        raise AssertionError(f"{node_name} needs an explicit own {property_name} property.")
+    return float(match.group(1)), float(match.group(2))
+
+
+def assert_points_visible(
+    test_case: unittest.TestCase,
+    camera_position: tuple[float, float],
+    camera_zoom: tuple[float, float],
+    points: dict[str, tuple[float, float]],
+) -> None:
+    for width, height in [(1280, 720), (1600, 900), (1920, 1080)]:
+        with test_case.subTest(resolution=f"{width}x{height}"):
+            half_width = width / (2 * camera_zoom[0])
+            half_height = height / (2 * camera_zoom[1])
+            left = camera_position[0] - half_width
+            right = camera_position[0] + half_width
+            top = camera_position[1] - half_height
+            bottom = camera_position[1] + half_height
+
+            for point_name, (point_x, point_y) in points.items():
+                with test_case.subTest(point=point_name):
+                    test_case.assertGreaterEqual(point_x, left)
+                    test_case.assertLessEqual(point_x, right)
+                    test_case.assertGreaterEqual(point_y, top)
+                    test_case.assertLessEqual(point_y, bottom)
+
+
+def is_ignored_csharp_path(path: Path) -> bool:
+    relative_parts = path.relative_to(REPO_ROOT).parts
+    return any(part in IGNORED_CSHARP_DIRS for part in relative_parts)
 
 
 class Story11ProjectStructureTest(unittest.TestCase):
@@ -44,7 +92,14 @@ class Story11ProjectStructureTest(unittest.TestCase):
         self.assertIn('run/main_scene="res://scenes/main/main.tscn"', project)
         self.assertIn('renderer/rendering_method="gl_compatibility"', project)
         self.assertIn('renderer/rendering_method.mobile="gl_compatibility"', project)
-        self.assertFalse(list(REPO_ROOT.glob("*.csproj")), "Story 1.1 must use GDScript, not C#.")
+
+        csharp_artifacts = [
+            path
+            for pattern in ("*.cs", "*.csproj")
+            for path in REPO_ROOT.rglob(pattern)
+            if not is_ignored_csharp_path(path)
+        ]
+        self.assertFalse(csharp_artifacts, "Story 1.1 must use GDScript, not C#.")
 
     def test_main_scene_loads_first_room(self) -> None:
         main_scene = read_text("scenes/main/main.tscn")
@@ -77,31 +132,32 @@ class Story11ProjectStructureTest(unittest.TestCase):
     def test_room_layout_places_player_path_and_goal_in_readable_composition(self) -> None:
         room_scene = read_text("scenes/rooms/room_001.tscn")
 
-        player_match = re.search(
-            r'\[node name="PlayerPlaceholder".*?\]\s+position = Vector2\((-?\d+), (-?\d+)\)',
-            room_scene,
-            re.S,
-        )
-        goal_match = re.search(
-            r'\[node name="DistantGoalPlaceholder".*?\]\s+position = Vector2\((-?\d+), (-?\d+)\)',
-            room_scene,
-            re.S,
-        )
-        camera_match = re.search(
-            r'\[node name="Camera2D".*?\]\s+position = Vector2\((-?\d+), (-?\d+)\).*?zoom = Vector2\(0\.(\d+), 0\.(\d+)\)',
-            room_scene,
-            re.S,
-        )
+        player_position = node_vector2(room_scene, "PlayerPlaceholder", "position")
+        goal_position = node_vector2(room_scene, "DistantGoalPlaceholder", "position")
+        camera_position = node_vector2(room_scene, "Camera2D", "position")
+        camera_zoom = node_vector2(room_scene, "Camera2D", "zoom")
 
-        self.assertIsNotNone(player_match, "Player placeholder needs an explicit entrance position.")
-        self.assertIsNotNone(goal_match, "Distant goal placeholder needs an explicit path-end position.")
-        self.assertIsNotNone(camera_match, "Camera2D needs an explicit position and zoom below 1.0.")
-
-        player_x = int(player_match.group(1))
-        goal_x = int(goal_match.group(1))
+        player_x = player_position[0]
+        goal_x = goal_position[0]
         self.assertLess(player_x, 0, "Player should start near the left/entrance side of the room.")
         self.assertGreater(goal_x, 0, "Goal should sit farther along the main path.")
         self.assertGreater(goal_x - player_x, 600, "Player, path direction, and goal should read in one frame.")
+        self.assertGreater(camera_zoom[0], 0)
+        self.assertGreater(camera_zoom[1], 0)
+
+        assert_points_visible(
+            self,
+            camera_position,
+            camera_zoom,
+            {
+                "player": player_position,
+                "goal": goal_position,
+                "goal_top": (goal_position[0], goal_position[1] - 112),
+                "goal_base": (goal_position[0], goal_position[1] + 184),
+                "path_start": (-820, 40),
+                "path_end": (860, 44),
+            },
+        )
 
         self.assertIn('name="MainPath"', room_scene)
         self.assertIn('name="RoomOutline"', room_scene)
@@ -117,8 +173,13 @@ class Story11ProjectStructureTest(unittest.TestCase):
         self.assertRegex(room_scene, r'\[node name="GoalCore" type="Polygon2D"')
 
     def test_default_launch_has_no_debug_overlay_or_complex_ui(self) -> None:
-        room_scene = read_text("scenes/rooms/room_001.tscn")
+        launch_files = [
+            "project.godot",
+            "scenes/main/main.tscn",
+            "scenes/rooms/room_001.tscn",
+        ]
         disallowed_visible_ui = [
+            "[autoload]",
             'type="Label"',
             'type="RichTextLabel"',
             'type="Button"',
@@ -127,9 +188,11 @@ class Story11ProjectStructureTest(unittest.TestCase):
             'name="TaskList"',
         ]
 
-        for marker in disallowed_visible_ui:
-            with self.subTest(marker=marker):
-                self.assertNotIn(marker, room_scene)
+        for relative_path in launch_files:
+            content = read_text(relative_path)
+            for marker in disallowed_visible_ui:
+                with self.subTest(relative_path=relative_path, marker=marker):
+                    self.assertNotIn(marker, content)
 
         self.assertFalse(
             (REPO_ROOT / "scripts" / "autoloads").exists(),
