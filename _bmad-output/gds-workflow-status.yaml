@@ -3,10 +3,10 @@ project_type: game
 project_name: dual-world-time-puzzle
 user_name: Sue
 created: 2026-05-18T17:51:48+08:00
-updated: 2026-05-20T12:00:38+08:00
+updated: 2026-05-21T00:00:00+08:00
 
-current_workflow: create-architecture
-next_workflow: create-epics-and-stories
+current_workflow: check-implementation-readiness
+next_workflow: sprint-planning
 
 # Workflow values start as pending and are replaced with artifact paths when complete.
 brainstorm-game: _bmad-output/brainstorming-session-2026-05-18-175252.md
@@ -18,8 +18,8 @@ create-ux-design: _bmad-output/planning-artifacts/ux-design-specification.md
 prd: optional
 project-context: pending
 create-architecture: _bmad-output/planning-artifacts/game-architecture.md
-create-epics-and-stories: pending
-check-implementation-readiness: pending
+create-epics-and-stories: _bmad-output/planning-artifacts/epics.md
+check-implementation-readiness: _bmad-output/planning-artifacts/implementation-readiness-report-2026-05-20.md
 sprint-planning: pending
 create-story: pending
 dev-story: pending
