@@ -1,0 +1,16 @@
+# Godot editor and import cache
+.godot/
+
+# Python test cache
+**/__pycache__/
+*.py[cod]
+
+# Godot sidecars generated from non-runtime planning/tooling folders
+_bmad/**/*.import
+_bmad/**/*.translation
+_bmad-output/**/*.import
+_bmad-output/**/*.translation
+.agents/**/*.import
+.agents/**/*.translation
+.claude/**/*.import
+.claude/**/*.translation
