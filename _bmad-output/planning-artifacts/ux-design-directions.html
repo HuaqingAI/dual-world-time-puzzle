@@ -1,0 +1,904 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>微光花园 UX Design Directions</title>
+  <style>
+    :root {
+      --seed: #f7d66a;
+      --seed-soft: #fff0a6;
+      --bloom: #64b96a;
+      --petal: #e9867a;
+      --blue: #78b7d6;
+      --wither: #7c8a77;
+      --deep: #24302a;
+      --ink: #25312a;
+      --paper: #f4f1e8;
+      --mist: #d9e3dc;
+      --shadow: rgba(21, 32, 24, .22);
+      --panel: rgba(244, 241, 232, .92);
+      --radius: 8px;
+      --gap: 8px;
+      color-scheme: light;
+      font-family: "Noto Sans SC", "Microsoft YaHei", Inter, system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(247, 214, 106, .16), transparent 28rem),
+        linear-gradient(135deg, #edf3ee, #d7e3dc 46%, #cbd8d3);
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 64px;
+      padding: 12px 20px;
+      background: rgba(244, 241, 232, .88);
+      border-bottom: 1px solid rgba(36, 48, 42, .14);
+      backdrop-filter: blur(14px);
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.2;
+      font-weight: 760;
+    }
+
+    .topbar p {
+      margin: 2px 0 0;
+      color: rgba(36, 48, 42, .72);
+      font-size: 13px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .toolbar a,
+    .toolbar button {
+      min-height: 36px;
+      padding: 0 12px;
+      color: var(--deep);
+      text-decoration: none;
+      background: rgba(255, 255, 255, .58);
+      border: 1px solid rgba(36, 48, 42, .16);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .toolbar a:hover,
+    .toolbar button:hover,
+    .toolbar button.active {
+      border-color: rgba(100, 185, 106, .55);
+      box-shadow: 0 0 0 3px rgba(100, 185, 106, .14);
+    }
+
+    .intro {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px 20px 8px;
+    }
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 16px;
+    }
+
+    .note {
+      padding: 16px;
+      background: rgba(244, 241, 232, .72);
+      border: 1px solid rgba(36, 48, 42, .12);
+      border-radius: 8px;
+      box-shadow: 0 12px 34px rgba(36, 48, 42, .08);
+    }
+
+    .note h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .note p,
+    .note li {
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .note ul {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    .directions {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 16px 20px 48px;
+    }
+
+    .direction {
+      min-height: calc(100vh - 96px);
+      margin: 18px 0 36px;
+      padding: 16px;
+      background: rgba(255, 255, 255, .45);
+      border: 1px solid rgba(36, 48, 42, .12);
+      border-radius: 8px;
+      box-shadow: 0 18px 48px rgba(36, 48, 42, .12);
+    }
+
+    .direction header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+
+    .eyebrow {
+      margin: 0 0 4px;
+      color: rgba(36, 48, 42, .64);
+      font-size: 12px;
+      font-weight: 720;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .direction h2 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    .direction .summary {
+      max-width: 760px;
+      margin: 8px 0 0;
+      color: rgba(36, 48, 42, .76);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .tag {
+      padding: 5px 8px;
+      font-size: 12px;
+      background: rgba(244, 241, 232, .78);
+      border: 1px solid rgba(36, 48, 42, .12);
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+
+    .mockup {
+      position: relative;
+      min-height: 680px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(36, 48, 42, .05)),
+        #cfdad3;
+      border: 1px solid rgba(36, 48, 42, .14);
+      border-radius: 8px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .32);
+    }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 72% 24%, rgba(247, 214, 106, .22), transparent 12rem),
+        radial-gradient(circle at 25% 78%, rgba(100, 185, 106, .16), transparent 16rem),
+        linear-gradient(135deg, #80927f, #b5c4b8 46%, #d2ded6);
+    }
+
+    .scene.bloom {
+      background:
+        radial-gradient(circle at 72% 24%, rgba(247, 214, 106, .34), transparent 12rem),
+        radial-gradient(circle at 25% 78%, rgba(100, 185, 106, .28), transparent 16rem),
+        linear-gradient(135deg, #91bd89, #d5e7bf 48%, #f4dfb3);
+    }
+
+    .garden-path {
+      position: absolute;
+      left: 7%;
+      top: 50%;
+      width: 84%;
+      height: 20%;
+      transform: rotate(-8deg);
+      background: rgba(244, 241, 232, .36);
+      border: 2px dashed rgba(36, 48, 42, .12);
+      border-radius: 48% 52% 44% 58%;
+      filter: blur(.1px);
+    }
+
+    .pond {
+      position: absolute;
+      right: 9%;
+      bottom: 10%;
+      width: 22%;
+      height: 18%;
+      background: rgba(120, 183, 214, .45);
+      border: 2px solid rgba(255, 255, 255, .32);
+      border-radius: 54% 46% 48% 52%;
+      box-shadow: inset 0 0 24px rgba(255, 255, 255, .32);
+    }
+
+    .player {
+      position: absolute;
+      left: 27%;
+      top: 58%;
+      width: 52px;
+      height: 66px;
+      transform: translate(-50%, -50%);
+      background:
+        radial-gradient(circle at 50% 22%, #fff7d2 0 18%, transparent 19%),
+        radial-gradient(circle at 50% 48%, #d9f2df 0 38%, transparent 39%);
+      border: 2px solid rgba(36, 48, 42, .35);
+      border-radius: 48% 48% 42% 42%;
+      box-shadow: 0 0 18px rgba(247, 214, 106, .42);
+    }
+
+    .seed {
+      position: absolute;
+      right: 18%;
+      top: 33%;
+      width: 38px;
+      height: 38px;
+      background: radial-gradient(circle, #fff8bf 0 30%, var(--seed) 34% 56%, transparent 60%);
+      border-radius: 50%;
+      box-shadow: 0 0 18px rgba(247, 214, 106, .78), 0 0 42px rgba(247, 214, 106, .35);
+    }
+
+    .seed::after {
+      content: "";
+      position: absolute;
+      inset: -18px;
+      border: 1px solid rgba(247, 214, 106, .45);
+      border-radius: 50%;
+      animation: pulse 2.2s ease-in-out infinite;
+    }
+
+    .trail {
+      position: absolute;
+      left: 30%;
+      top: 51%;
+      width: 34%;
+      height: 12%;
+      border-top: 3px dotted rgba(247, 214, 106, .62);
+      border-radius: 50%;
+      transform: rotate(-15deg);
+    }
+
+    .vine {
+      position: absolute;
+      left: 43%;
+      top: 45%;
+      width: 23%;
+      height: 9%;
+      border-radius: 64px;
+      background:
+        repeating-linear-gradient(90deg, rgba(100, 185, 106, .72), rgba(100, 185, 106, .72) 16px, rgba(247, 214, 106, .36) 17px, rgba(247, 214, 106, .36) 24px);
+      border: 2px solid rgba(36, 48, 42, .25);
+      box-shadow: 0 8px 18px rgba(36, 48, 42, .14);
+    }
+
+    .flower-door {
+      position: absolute;
+      left: 10%;
+      top: 25%;
+      width: 86px;
+      height: 92px;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(247, 214, 106, .8) 0 12%, transparent 13%),
+        radial-gradient(ellipse at 50% 24%, rgba(233, 134, 122, .75) 0 22%, transparent 23%),
+        radial-gradient(ellipse at 30% 46%, rgba(233, 134, 122, .58) 0 20%, transparent 21%),
+        radial-gradient(ellipse at 70% 46%, rgba(233, 134, 122, .58) 0 20%, transparent 21%);
+      border-bottom: 5px solid rgba(100, 185, 106, .55);
+      filter: saturate(.9);
+    }
+
+    .plants {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .plant {
+      position: absolute;
+      width: 34px;
+      height: 54px;
+      background: linear-gradient(180deg, rgba(100, 185, 106, .82), rgba(57, 111, 61, .55));
+      border-radius: 60% 40% 52% 48%;
+      transform-origin: bottom center;
+      opacity: .74;
+    }
+
+    .plant:nth-child(1) { left: 18%; bottom: 16%; transform: rotate(-18deg); }
+    .plant:nth-child(2) { left: 34%; bottom: 23%; transform: rotate(16deg) scale(.9); }
+    .plant:nth-child(3) { right: 28%; top: 18%; transform: rotate(-12deg) scale(.78); }
+    .plant:nth-child(4) { right: 9%; top: 48%; transform: rotate(22deg) scale(1.1); }
+    .plant:nth-child(5) { left: 50%; bottom: 8%; transform: rotate(8deg) scale(.82); }
+
+    .hud {
+      position: absolute;
+      z-index: 4;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 10px;
+      color: var(--deep);
+      background: var(--panel);
+      border: 1px solid rgba(36, 48, 42, .14);
+      border-radius: 8px;
+      box-shadow: 0 10px 28px rgba(36, 48, 42, .14);
+    }
+
+    .hud.compact {
+      background: rgba(244, 241, 232, .72);
+      box-shadow: 0 8px 24px rgba(36, 48, 42, .1);
+    }
+
+    .hud .dot {
+      width: 14px;
+      height: 14px;
+      background: var(--seed);
+      border-radius: 50%;
+      box-shadow: 0 0 12px rgba(247, 214, 106, .8);
+      flex: 0 0 auto;
+    }
+
+    .hud .label {
+      font-size: 13px;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .state-switch {
+      position: absolute;
+      z-index: 5;
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      background: rgba(36, 48, 42, .18);
+      border-radius: 8px;
+      backdrop-filter: blur(8px);
+    }
+
+    .state-pill {
+      min-width: 68px;
+      padding: 7px 10px;
+      font-size: 13px;
+      text-align: center;
+      background: rgba(244, 241, 232, .76);
+      border-radius: 6px;
+    }
+
+    .state-pill.active {
+      background: var(--seed-soft);
+      box-shadow: inset 0 0 0 1px rgba(247, 214, 106, .9);
+    }
+
+    .prompt {
+      position: absolute;
+      z-index: 6;
+      padding: 8px 12px;
+      max-width: 280px;
+      color: var(--deep);
+      background: rgba(255, 248, 210, .92);
+      border: 1px solid rgba(247, 214, 106, .65);
+      border-radius: 8px;
+      box-shadow: 0 12px 28px rgba(36, 48, 42, .14);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .hint-line {
+      position: absolute;
+      z-index: 3;
+      border-top: 3px solid rgba(247, 214, 106, .64);
+      border-radius: 50%;
+      opacity: .85;
+      filter: drop-shadow(0 0 6px rgba(247, 214, 106, .45));
+    }
+
+    .mini-menu {
+      position: absolute;
+      z-index: 7;
+      display: grid;
+      gap: 8px;
+      width: 260px;
+      padding: 14px;
+      background: rgba(244, 241, 232, .94);
+      border: 1px solid rgba(36, 48, 42, .16);
+      border-radius: 8px;
+      box-shadow: 0 20px 50px rgba(36, 48, 42, .2);
+    }
+
+    .mini-menu h3 {
+      margin: 0 0 4px;
+      font-size: 18px;
+    }
+
+    .menu-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 38px;
+      padding: 0 10px;
+      background: rgba(255, 255, 255, .44);
+      border: 1px solid rgba(36, 48, 42, .12);
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .menu-row.focus {
+      border-color: rgba(247, 214, 106, .86);
+      box-shadow: 0 0 0 3px rgba(247, 214, 106, .22);
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: 100%;
+    }
+
+    .split-label {
+      position: absolute;
+      top: 14px;
+      z-index: 5;
+      padding: 7px 10px;
+      font-size: 13px;
+      background: rgba(244, 241, 232, .82);
+      border: 1px solid rgba(36, 48, 42, .12);
+      border-radius: 8px;
+    }
+
+    .side {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .side:first-child {
+      border-right: 1px solid rgba(36, 48, 42, .2);
+    }
+
+    .side .scene {
+      position: absolute;
+      inset: 0;
+    }
+
+    .progress-ring {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: conic-gradient(var(--seed) 0 58%, rgba(36, 48, 42, .12) 58% 100%);
+      display: grid;
+      place-items: center;
+    }
+
+    .progress-ring::after {
+      content: "3/5";
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      background: rgba(244, 241, 232, .94);
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .choice-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 22px;
+      z-index: 6;
+    }
+
+    .choice {
+      min-height: 74px;
+      padding: 10px;
+      background: rgba(244, 241, 232, .9);
+      border: 1px solid rgba(36, 48, 42, .14);
+      border-radius: 8px;
+      box-shadow: 0 12px 26px rgba(36, 48, 42, .12);
+    }
+
+    .choice strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .choice span {
+      color: rgba(36, 48, 42, .72);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .choice:hover {
+      border-color: rgba(100, 185, 106, .55);
+      transform: translateY(-1px);
+    }
+
+    .guide-panel {
+      position: absolute;
+      z-index: 6;
+      max-width: 330px;
+      padding: 14px;
+      background: rgba(36, 48, 42, .82);
+      color: #f8f6ed;
+      border: 1px solid rgba(255, 255, 255, .16);
+      border-radius: 8px;
+      box-shadow: 0 18px 42px rgba(36, 48, 42, .22);
+    }
+
+    .guide-panel h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .guide-panel p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .debug {
+      position: absolute;
+      z-index: 8;
+      right: 14px;
+      top: 14px;
+      width: 240px;
+      padding: 10px;
+      color: #dff2e5;
+      background: rgba(21, 28, 24, .86);
+      border: 1px solid rgba(255, 255, 255, .14);
+      border-radius: 8px;
+      font: 12px/1.5 Consolas, monospace;
+    }
+
+    .compare-mode .direction:not(.favorite) {
+      display: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(.86); opacity: .36; }
+      50% { transform: scale(1.08); opacity: .82; }
+    }
+
+    @media (max-width: 820px) {
+      .topbar {
+        position: static;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .intro-grid,
+      .comparison,
+      .choice-strip,
+      .direction header {
+        grid-template-columns: 1fr;
+      }
+
+      .mockup {
+        min-height: 620px;
+      }
+
+      .tags {
+        justify-content: flex-start;
+      }
+
+      .mini-menu,
+      .guide-panel {
+        width: calc(100% - 32px);
+        max-width: none;
+      }
+
+      .choice-strip {
+        position: static;
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="topbar" aria-label="Design direction navigation">
+    <div>
+      <h1>微光花园 UX Design Directions</h1>
+      <p>6 个可评估方向：同一核心体验，不同 HUD 密度、状态表达和提示方式。</p>
+    </div>
+    <div class="toolbar">
+      <a href="#direction-1">01</a>
+      <a href="#direction-2">02</a>
+      <a href="#direction-3">03</a>
+      <a href="#direction-4">04</a>
+      <a href="#direction-5">05</a>
+      <a href="#direction-6">06</a>
+      <button type="button" id="toggleFavorites">只看候选</button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="intro">
+      <div class="intro-grid">
+        <div class="note">
+          <h2>评估方式</h2>
+          <p>每个方向都展示首房间的核心体验：看见目标、切换世界、读懂变化、收集种子、带回修复。评估时优先看它是否让世界切换更可读、种子更有情感重量、修复反馈更明确。</p>
+        </div>
+        <div class="note">
+          <h2>快速标记</h2>
+          <p>点击每个方向右上角的“标为候选”，再用顶部按钮筛选。这个 HTML 是静态展示页，候选状态只保存在当前浏览器会话。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="directions">
+      <article class="direction" id="direction-1">
+        <header>
+          <div>
+            <p class="eyebrow">Direction 01</p>
+            <h2>场景优先的极简 HUD</h2>
+            <p class="summary">默认几乎没有 UI。玩家通过场景构图、对象微光、切换涟漪和近身提示理解下一步。适合最 cozy、最沉浸的方向。</p>
+          </div>
+          <div class="tags">
+            <span class="tag">低 UI 密度</span>
+            <span class="tag">环境教学</span>
+            <button class="tag favorite-toggle" type="button">标为候选</button>
+          </div>
+        </header>
+        <div class="mockup">
+          <div class="scene bloom">
+            <div class="garden-path"></div>
+            <div class="pond"></div>
+            <div class="trail"></div>
+            <div class="vine"></div>
+            <div class="flower-door"></div>
+            <div class="plants"><span class="plant"></span><span class="plant"></span><span class="plant"></span><span class="plant"></span><span class="plant"></span></div>
+            <div class="player"></div>
+            <div class="seed"></div>
+            <div class="hud compact" style="left: 22px; top: 22px;"><span class="dot"></span><span class="label">盛放</span></div>
+            <div class="prompt" style="left: 28%; top: 68%;">Space 切换花园状态</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="direction" id="direction-2">
+        <header>
+          <div>
+            <p class="eyebrow">Direction 02</p>
+            <h2>双状态对照 Lens</h2>
+            <p class="summary">用对照式视觉语言帮助玩家理解“同一空间的两种状态”。适合首房间教学和可读性测试，但长期使用可能降低沉浸感。</p>
+          </div>
+          <div class="tags">
+            <span class="tag">强可读性</span>
+            <span class="tag">教学友好</span>
+            <button class="tag favorite-toggle" type="button">标为候选</button>
+          </div>
+        </header>
+        <div class="mockup">
+          <div class="comparison">
+            <div class="side">
+              <span class="split-label" style="left: 14px;">枯萎</span>
+              <div class="scene">
+                <div class="garden-path"></div>
+                <div class="pond"></div>
+                <div class="flower-door" style="filter: grayscale(.45) saturate(.6);"></div>
+                <div class="plants"><span class="plant"></span><span class="plant"></span><span class="plant"></span><span class="plant"></span><span class="plant"></span></div>
+                <div class="player"></div>
+                <div class="seed" style="opacity:.72;"></div>
+              </div>
+            </div>
+            <div class="side">
+              <span class="split-label" style="right: 14px;">盛放</span>
+              <div class="scene bloom">
+                <div class="garden-path"></div>
+                <div class="pond"></div>
+                <div class="vine"></div>
+                <div class="flower-door"></div>
+                <div class="plants"><span class="plant"></span><span class="plant"></span><span class="plant"></span><span class="plant"></span><span class="plant"></span></div>
+                <div class="player"></div>
+                <div class="seed"></div>
+                <div class="hint-line" style="left: 28%; top: 54%; width: 36%; transform: rotate(-12deg);"></div>
+              </div>
+            </div>
+          </div>
+          <div class="state-switch" style="left: 50%; bottom: 24px; transform: translateX(-50%);">
+            <span class="state-pill">枯萎</span><span class="state-pill active">盛放</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="direction" id="direction-3">
+        <header>
+          <div>
+            <p class="eyebrow">Direction 03</p>
+            <h2>种子陪伴焦点</h2>
+            <p class="summary">把发光种子作为情感对象强化：HUD、微光轨迹和完成反馈都围绕种子。适合强调“带它回家”的核心记忆点。</p>
+          </div>
+          <div class="tags">
+            <span class="tag">情感对象</span>
+            <span class="tag">收集闭环</span>
+            <button class="tag favorite-toggle" type="button">标为候选</button>
+          </div>
+        </header>
+        <div class="mockup">
+          <div class="scene bloom">
+            <div class="garden-path"></div>
+            <div class="pond"></div>
+            <div class="trail" style="left: 24%; top: 55%; width: 48%;"></div>
+            <div class="vine"></div>
+            <div class="flower-door"></div>
+            <div class="plants"><span class="plant"></span><span class="plant"></span><span class="plant"></span><span class="plant"></span><span class="plant"></span></div>
+            <div class="player"></div>
+            <div class="seed" style="right: auto; left: 34%; top: 51%; width: 28px; height: 28px;"></div>
+            <div class="hud" style="left: 24px; top: 24px;"><span class="dot"></span><span class="label">携带：根之微光</span></div>
+            <div class="prompt" style="right: 15%; top: 24%;">把微光带回出口花</div>
+            <div class="hud compact" style="right: 24px; bottom: 24px;"><span class="label">下一步：种下它</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="direction" id="direction-4">
+        <header>
+          <div>
+            <p class="eyebrow">Direction 04</p>
+            <h2>中心花园进度感</h2>
+            <p class="summary">把修复进度做成轻量环境状态，而不是数值系统。适合主菜单、中心花园和房间完成后的回看。</p>
+          </div>
+          <div class="tags">
+            <span class="tag">成长反馈</span>
+            <span class="tag">中心花园</span>
+            <button class="tag favorite-toggle" type="button">标为候选</button>
+          </div>
+        </header>
+        <div class="mockup">
+          <div class="scene bloom">
+            <div class="garden-path" style="left: 12%; top: 40%; width: 76%; height: 30%; transform: rotate(2deg);"></div>
+            <div class="plants"><span class="plant"></span><span class="plant"></span><span class="plant"></span><span class="plant"></span><span class="plant"></span></div>
+            <div class="flower-door" style="left: 46%; top: 38%; transform: scale(1.25);"></div>
+            <div class="seed" style="right: 42%; top: 46%;"></div>
+            <div class="hud" style="left: 24px; top: 24px;">
+              <div class="progress-ring"></div>
+              <span class="label">中心花园<br>已恢复三处</span>
+            </div>
+            <div class="choice-strip">
+              <div class="choice"><strong>根之角落</strong><span>藤蔓桥已恢复，适合继续教学。</span></div>
+              <div class="choice"><strong>露水池塘</strong><span>下一枚种子在水面附近闪光。</span></div>
+              <div class="choice"><strong>返回房间</strong><span>回看刚刚修复的变化。</span></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="direction" id="direction-5">
+        <header>
+          <div>
+            <p class="eyebrow">Direction 05</p>
+            <h2>柔和手册式菜单</h2>
+            <p class="summary">暂停、设置和提示采用轻量手册气质。它适合系统 UI，但不能成为主体验的主要教学方式。</p>
+          </div>
+          <div class="tags">
+            <span class="tag">菜单系统</span>
+            <span class="tag">手柄焦点</span>
+            <button class="tag favorite-toggle" type="button">标为候选</button>
+          </div>
+        </header>
+        <div class="mockup">
+          <div class="scene">
+            <div class="garden-path"></div>
+            <div class="pond"></div>
+            <div class="flower-door" style="filter: grayscale(.35);"></div>
+            <div class="plants"><span class="plant"></span><span class="plant"></span><span class="plant"></span><span class="plant"></span><span class="plant"></span></div>
+            <div class="player"></div>
+            <div class="seed"></div>
+            <div class="mini-menu" style="right: 34px; top: 34px;">
+              <h3>暂停</h3>
+              <div class="menu-row focus"><span>继续</span><span>Enter</span></div>
+              <div class="menu-row"><span>温和提示</span><span>H</span></div>
+              <div class="menu-row"><span>重置房间</span><span>R</span></div>
+              <div class="menu-row"><span>设置</span><span></span></div>
+              <div class="menu-row"><span>退出试玩</span><span></span></div>
+            </div>
+            <div class="guide-panel" style="left: 34px; bottom: 34px;">
+              <h3>提示</h3>
+              <p>有些植物会在盛放时伸展。先观察断开的路，再试着切换花园状态。</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="direction" id="direction-6">
+        <header>
+          <div>
+            <p class="eyebrow">Direction 06</p>
+            <h2>试玩与调试清晰优先</h2>
+            <p class="summary">面向 Web demo 和早期外部测试，保留更明确的状态标签、调试读数和完成指标。适合测试，不适合最终默认体验。</p>
+          </div>
+          <div class="tags">
+            <span class="tag">Web demo</span>
+            <span class="tag">可测试性</span>
+            <button class="tag favorite-toggle" type="button">标为候选</button>
+          </div>
+        </header>
+        <div class="mockup">
+          <div class="scene bloom">
+            <div class="garden-path"></div>
+            <div class="pond"></div>
+            <div class="trail"></div>
+            <div class="vine"></div>
+            <div class="flower-door"></div>
+            <div class="plants"><span class="plant"></span><span class="plant"></span><span class="plant"></span><span class="plant"></span><span class="plant"></span></div>
+            <div class="player"></div>
+            <div class="seed"></div>
+            <div class="state-switch" style="left: 24px; top: 24px;"><span class="state-pill">枯萎</span><span class="state-pill active">盛放</span></div>
+            <div class="hud" style="left: 24px; bottom: 24px;"><span class="dot"></span><span class="label">目标：收集种子并返回出口花</span></div>
+            <div class="debug">
+world_state: BLOOM<br>
+is_switching: false<br>
+room_id: room_001<br>
+carried_seed: none<br>
+restored_slots: 0<br>
+fps: 60
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const favorites = new Set();
+    const root = document.body;
+    const toggleFilter = document.querySelector("#toggleFavorites");
+
+    document.querySelectorAll(".favorite-toggle").forEach((button) => {
+      button.addEventListener("click", () => {
+        const direction = button.closest(".direction");
+        const id = direction.id;
+        if (favorites.has(id)) {
+          favorites.delete(id);
+          direction.classList.remove("favorite");
+          button.textContent = "标为候选";
+        } else {
+          favorites.add(id);
+          direction.classList.add("favorite");
+          button.textContent = "取消候选";
+        }
+      });
+    });
+
+    toggleFilter.addEventListener("click", () => {
+      const enabled = root.classList.toggle("compare-mode");
+      toggleFilter.classList.toggle("active", enabled);
+      toggleFilter.textContent = enabled ? "显示全部" : "只看候选";
+    });
+  </script>
+</body>
+</html>
